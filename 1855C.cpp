@@ -56,9 +56,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const vector<ll> &a, const vector<ll> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    return a[1] - a[0] > b[1] - b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -85,44 +87,74 @@ double pi = 3.14159, npi = -3.14159;
  << npi << endl;
 */
 
-ll check( vector<vector<ll>>& vec)
-{
-    ll count = 0;
-    ll sum1 = 0, sum2 = 0;
-    ll start = 0, end = vec.size()-1;
-    while(start < end)
-    {
-        sum1 = vec[start][0] + vec[end][0];
-        sum2 = vec[start][1] + vec[end][1];
-        if(sum1 <= sum2)
-        {
-            count++ , start++;
-        }
-        sum1 = 0, sum2=0;
-        end--;
-    }
-    return count;
-}
+/* Template for ordered set */
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
+#define ar array
 void solve()
 {
-    ll n; cin>>n;   
-    vector<ll>spend(n);
+    ll n; cin>>n;
+    vector<ll>nums(n);
     for(ll i=0;i<n;i++)
-        cin>>spend[i];
-    vector<ll>have(n);
-    for(ll i=0;i<n;i++)
-        cin>>have[i];
-    vector<vector<ll>>vec(n,vector<ll>(2));
+        cin>>nums[i];
+    
+    bool flag1 = false, flag2 = false;
+    vector<ll>pos, neg;
     for(ll i=0;i<n;i++)
     {
-        vec[i][0] = spend[i];
-        vec[i][1] = have[i];
+        if(nums[i] > 0){
+            flag1 =true;
+            pos.push_back(i);
+        }
+        if(nums[i] < 0){
+            flag2 = true;
+            neg.push_back(i);
+        }
     }
-    sort(vec.begin(),vec.end(),comparator);
-
-    ll ans = check(vec);
-    cout<<ans<<endl;
+    if(!flag1 and !flag2){
+        cout<<0<<endl;
+        return;
+    }
+    else if(flag1 and !flag2){
+        cout<<n-1<<endl;
+        for(ll i=1;i<n;i++)
+            cout<<i<<" "<<i+1<<endl;
+        return;
+    }
+    else if(flag2 and !flag1){
+        cout<<n-1<<endl;
+        for(ll i=n;i>1;i--)
+            cout<<i<<" "<<i-1<<endl;
+        return;
+    }
+    ll maxval = INT_MIN;
+    ll maxidx = -1;
+    flag1 = false;
+    for(ll i=0;i<n;i++)
+    {
+        if(abs(nums[i]) > maxval){
+            maxval = nums[i];
+            maxidx = i;
+            flag1 = (nums[i] < 0) ? false : true;
+        }
+    }
+    if(flag1){
+        cout<<pos.size() + n-1<<endl;
+        for(auto it:pos)
+            cout<<it+1<<" "<<maxidx+1<<endl;
+        for(ll i=1;i<n;i++)
+            cout<<i<<" "<<i+1<<endl;
+    }
+    else {
+        cout<<neg.size() + n-1<<endl;
+        for(auto it : neg)  
+            cout<<it+1<<" "<<maxidx+1<<endl;
+        for(ll i=n;i>1;i--)
+            cout<<i<<" "<<i-1<<endl;
+    }
 }
 int main()
 {

@@ -56,9 +56,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const vector<ll> &a, const vector<ll> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    return a[1] - a[0] > b[1] - b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -85,44 +87,23 @@ double pi = 3.14159, npi = -3.14159;
  << npi << endl;
 */
 
-ll check( vector<vector<ll>>& vec)
-{
-    ll count = 0;
-    ll sum1 = 0, sum2 = 0;
-    ll start = 0, end = vec.size()-1;
-    while(start < end)
-    {
-        sum1 = vec[start][0] + vec[end][0];
-        sum2 = vec[start][1] + vec[end][1];
-        if(sum1 <= sum2)
-        {
-            count++ , start++;
-        }
-        sum1 = 0, sum2=0;
-        end--;
-    }
-    return count;
-}
+/* Template for ordered set */
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
 void solve()
 {
-    ll n; cin>>n;   
-    vector<ll>spend(n);
-    for(ll i=0;i<n;i++)
-        cin>>spend[i];
-    vector<ll>have(n);
-    for(ll i=0;i<n;i++)
-        cin>>have[i];
-    vector<vector<ll>>vec(n,vector<ll>(2));
-    for(ll i=0;i<n;i++)
+    ll n; cin>>n;
+    ll c = 0;
+    for(ll i=1;i<=n;i++)
     {
-        vec[i][0] = spend[i];
-        vec[i][1] = have[i];
+        ll x; cin>>x;
+        if(x == i)
+            c++;
     }
-    sort(vec.begin(),vec.end(),comparator);
-
-    ll ans = check(vec);
-    cout<<ans<<endl;
+    cout<<(c+1)/2<<endl;
 }
 int main()
 {
