@@ -1,0 +1,1 @@
+{"name":"Local: 1571B","url":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1571B.cpp","tests":[{"id":1692160655645,"input":"2\n1\n1 42\n2\n3 10 15 8\n2 12 11","output":"43\n13"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1571B.cpp","group":"local","local":true}
