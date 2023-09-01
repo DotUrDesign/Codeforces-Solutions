@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,50 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n,k; cin>>n>>k;
+    vector<ll>nums(n);
+    map<ll,ll>mpp;
+    for(ll i=0;i<n;i++)
+    {
+        cin>>nums[i];
+        mpp[nums[i]]++;
+    }
+
+    if(mpp[nums[n-1]] < k or mpp[nums[0]] < k){
+        cout<<"NO"<<endl;
+        return;
+    }
+    if(nums[0] == nums[n-1]){
+        cout<<"YES"<<endl;
+        return;
+    }
+    
+    ll c = 0;
+    bool f = false;
+    for(ll i=0;i<n;i++)
+    {
+        if(nums[i] == nums[0] and !f){
+            c++;
+            if(c == k){
+                f = true;
+                c = 0;
+            }
+        }
+        else if(nums[i] == nums[n-1] and f){
+            c++;
+            if(c == k){
+                cout<<"YES"<<endl;
+                return;
+            }
+        }
+    }
+    cout<<"NO"<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,36 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n; cin>>n;
+    vector<ll>nums(n);
+    for(ll i=0;i<n;i++)
+        cin>>nums[i];
+    
+    vector<ll>ans;
+    ans.push_back(nums[0]);
+    for(ll i=1;i<n;i++)
+    {
+        if((min(nums[i],nums[i-1]) - 1) != 0){
+            ans.push_back(min(nums[i],nums[i-1]) - 1);
+            ans.push_back(nums[i]);
+        }
+        else{
+            if(nums[i-1] > nums[i])
+                ans.push_back(nums[i]);
+            ans.push_back(nums[i]);
+        }
+    }
+
+    cout<<ans.size()<<endl;
+    for(auto it:ans)
+        cout<<it<<" ";
+    cout<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

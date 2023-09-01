@@ -14,18 +14,20 @@ using ll = long long;
 #define ar array
 
 int fcuk = 1000000;
-bool sieve[1000001];
+int sieve[1000001];
 void createSieve()
 {
-    sieve[1] = sieve[0] = false;
+    sieve[1] = 1;
+    sieve[0] = 0;
     for(ll i=2;i<=fcuk;i++)
-        sieve[i] = true;
+        sieve[i] = i;
     for(ll i=2;(i*i)<=fcuk;i++)
     {
-        if(sieve[i] == true)
+        if(sieve[i] == i)
         {
             for(ll j=i*i;j<=fcuk;j+=i)
-                sieve[j] = false;
+                if(sieve[j] == j)
+                    sieve[j] = i;
         }
     }
 }
@@ -83,9 +85,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,38 +94,25 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
-}
+void solve()
+{
+    ll n,m; cin>>n>>m;
+    if(n == 1 or m == 1){
+        cout<<"Yes"<<endl;
+        return;
+    }
+
+    if(sieve[n] <= m)
+        cout<<"No"<<endl;
+    else
+        cout<<"Yes"<<endl;
+}   
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
+   createSieve();
      ll t; cin>>t;
      while(t--)
         solve();

@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,44 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n; cin>>n;
+    if(!(n&1)){
+        cout<<"No"<<endl;
+        return;
+    }
+    cout<<"Yes"<<endl;
+    set<ll>s;
+    for(ll i=1;i<=(2*n);i++)
+        s.insert(i);
+
+    ll val = n+n+1;
+    for(ll i=n;i>=1;i--)
+    {
+        if(i != val-i and val-i <= 2*n and s.find(i) != s.end() and s.find(val-i) != s.end())
+        {
+            cout<<i<<" "<<val-i<<endl;
+            s.erase(i);
+            s.erase(val-i);
+            val++;
+        }
+        else
+            break;
+    }
+
+    vector<ll>vec(s.begin(), s.end());
+    int i=0,j=vec.size()-1;
+    while(i < j)
+    {
+        cout<<vec[i]<<" "<<vec[j]<<endl;
+        i++;
+        j--;
+    }
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

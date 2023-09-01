@@ -87,57 +87,46 @@ double pi = 3.14159, npi = -3.14159;
  << npi << endl;
 */
 
+vector<ll>cnt;
+
+int dfs(ll node, ll parent, vector<ll>adj[])
+{
+    ll c = 0;
+    for(auto it:adj[node])
+    {
+        if(it != parent)
+            c += dfs(it, node, adj);
+    }
+    if(c == 0 and adj[node].size() == 1)
+        c++;
+    
+    cnt[node] = c;
+    return c;
+}
+
 void solve()
 {
     ll n; cin>>n;
-    vector<ll>adj[n+1];
+    vector<ll>adj[n+1];  
     for(ll i=0;i<n-1;i++)
     {
         ll u,v; cin>>u>>v;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
-    vector<ll>level(n+1,0);
-    map<ll,ll>leaf;
-    queue<pair<ll,ll>>q;
-    vector<ll>vis(n+1,0);
-    q.push({1,0});
-    vis[1] = vis[0] = 1;
-    while(!q.empty())
+
+    cnt.assign(n+1, 0);
+    dfs(1,-1,adj);
+
+    // for(auto it:cnt)
+    //     cout<<it<<" ";
+    // cout<<endl;
+
+    ll q; cin>>q;
+    while(q--)
     {
-        ll node = q.front().first;
-        ll lev = q.front().second;
-        q.pop();
-        level[node] = lev;
-        bool flag = true;
-        for(auto it:adj[node])
-        {
-            if(!vis[it])
-            {
-                vis[it]= 1;
-                q.push({it,lev+1});
-                flag = false;
-            }
-        }
-        if(flag)
-            leaf[node] = 1;
-    }
-    // ll maxlevel = *max_element(level.begin(),level.end());
-    ll que; cin>>que;
-    while(que--)
-    {
-        ll x,y; cin>>x>>y;
-        if(leaf.find(x) != leaf.end() and leaf.find(y) != leaf.end())
-            cout<<1<<endl;
-        else if(leaf.find(x) != leaf.end() or leaf.find(y) != leaf.end())
-        {
-            if(level[x] == level[y])
-                cout<<1<<endl;
-            else
-                cout<<2<<endl;
-        }
-        else
-            cout<<4<<endl;
+        ll x, y; cin>>x>>y;
+        cout<<(cnt[x] * cnt[y])<<endl;
     }
 }
 int main()

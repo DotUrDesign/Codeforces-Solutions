@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,60 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+// ll calc(ll mid,ll i)
+// {
+//     ll a = (ll)(pow(i,mid+1)) - 1;
+//     return (a/(i-1));
+// }
+
+void solve()
+{
+    // ll n; cin>>n;
+    // for(ll i=2;i<=1000;i++) // k > 1
+    // {   
+    //     ll low = 2;  // 1 + x + x^2 ... this step should be done at least once... that's the reason behind taking low = 2;
+    //     ll high = 21;
+    //     bool f = false;
+    //     while(low <= high)
+    //     {
+    //         ll mid = low + (high - low)/2;
+    //         ll x = calc(mid, i);
+    //         if(x == n){
+    //             f = true;
+    //             break;
+    //         }
+    //         else if(x < n)
+    //             low = mid+1;
+    //         else
+    //             high = mid-1;
+    //     }
+    //     if(f){
+    //         cout<<"YES"<<endl;
+    //         return;
+    //     }
+    // }
+    // cout<<"NO"<<endl;
+
+    ll n; cin>>n;
+    for(ll k=2;k<=1000;k++)
+    {
+        ll ans = 1 + k;
+        ll t = k*k;
+        for(ll j=2;j<=20;j++)
+        {
+            ans += t;
+            if(ans == n){
+                cout<<"YES"<<endl;
+                return;
+            }
+            t *= k;
+        }
+    }
+    cout<<"NO"<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

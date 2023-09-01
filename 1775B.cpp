@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,56 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n; cin>>n;
+    vector<vector<ll>>vec(n);
+    int x,y;
+    for(ll i=0;i<n;i++)
+    {
+        cin>>x;
+        for(ll j=0;j<x;j++){
+            cin>>y;
+            vec[i].push_back(y);
+        }
+    }
+
+    vector<ll>vis1(2e5+1, 0), vis2(2e5+1, 0);
+    bool res = false;
+    for(ll i=0;i<n;i++)
+    {
+        bool f = false;
+        for(ll j=0;j<vec[i].size();j++)
+        {
+            if(!vis1[vec[i][j]])
+                f = true;
+            vis1[vec[i][j]] = 1;
+        }
+        if(!f){
+            res = true;
+            break;
+        }
+
+        bool f2 = false;
+        for(ll j=0;j<vec[n-1-i].size();j++)
+        {
+            if(!vis2[vec[n-1-i][j]])
+                f2 = true;
+            vis2[vec[n-1-i][j]] = 1;
+        }
+        if(!f2){
+            res = true;
+            break;
+        }
+    }
+    if(res)
+        cout<<"yes"<<endl;
+    else
+        cout<<"no"<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

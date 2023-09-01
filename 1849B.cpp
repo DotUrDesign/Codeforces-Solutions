@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const pair<int,int> &a, const pair<int,int> &b)
+bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
 {
-    if(a.first == b.first)
-       return a.second>b.second;
-    return a.first < b.first;
+    if(a[0] == b[0])
+       return a[1] < b[1];
+    return a[0] > b[0];
 }
 
 /* BIT MANIPULATION */
@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,38 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
+void solve()
+{
+    ll n,k; cin>>n>>k;
+    vector<ll>nums(n);
+    vector<ll>ans;
+    for(ll i=0;i<n;i++){
+        cin>>nums[i];
+        nums[i] = nums[i]%k;
+        if(nums[i] == 0)
+            ans.push_back(i);
+    }
+    
+    vector<ar<ll,2>>v;
+    for(ll i=0;i<n;i++){
+        if(nums[i] != 0){
+            nums[i] -= k;
+            v.push_back({nums[i], i});
+        }
+    }
+    
+    sort(v.begin(), v.end(), comparator);
+
+    for(auto it : v)
+        ans.push_back(it[1]);
  
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+    for(auto it : ans)
+        cout<<it+1<<" ";
+    cout<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

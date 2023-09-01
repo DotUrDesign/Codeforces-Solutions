@@ -57,11 +57,15 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const pair<int,int> &a, const pair<int,int> &b)
+bool comparator(const vector<ll> &a, const vector<ll>&b)
 {
-    if(a.first == b.first)
-       return a.second>b.second;
-    return a.first < b.first;
+    if(a[0] == b[0])
+    {
+        if(a[1] == b[1])
+            return a[2] < b[2];
+        return a[1] < b[1];
+    }
+    return a[0] > b[0];
 }
 
 /* BIT MANIPULATION */
@@ -83,9 +87,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +96,55 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll part, prob, dur;
+    cin>>part>>prob>>dur;
+
+    ll tim[part][prob];
+    for(ll i=0;i<part;i++)
+    {
+        for(ll j=0;j<prob;j++)
+            cin>>tim[i][j];
+    }
+
+    vector<vector<ll>>ans(part, vector<ll>(3));
+    for(ll i=0;i<part;i++)
+    {
+        sort(tim[i], tim[i] + prob);
+        ll sum = 0, pen = 0, cnt = 0;
+        for(ll j=0;j<prob;j++)
+        {
+            if((sum + tim[i][j]) <= dur)
+            {
+                sum += tim[i][j];
+                cnt++;
+                pen += sum;
+            }
+            else
+                break;
+        }
+        ans[i][0] = cnt;
+        ans[i][1] = pen;
+        ans[i][2] = i;
+    }
+    
+    sort(ans.begin(), ans.end(), comparator);
+
+    // for(auto it:ans)
+    //     cout<<it[0]<<" "<<it[1]<<" "<<it[2]<<endl;
+    
+    for(ll i=0;i<part;i++)
+    {
+        if(ans[i][2] == 0){
+            cout<<i+1<<endl;
+            break;
+        }
+    }
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

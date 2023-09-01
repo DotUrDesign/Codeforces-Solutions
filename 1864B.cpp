@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,56 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n, k; 
+    cin>>n>>k;
+    string s; cin>>s;
+    
+    if(k&1)
+    {
+        int arr[26][2];
+        for(ll i=0;i<26;i++)
+            arr[i][0] = arr[i][1] = 0;
+        
+        for(ll i=0;i<n;i++){
+            if(i&1)
+                arr[s[i]-'a'][1]++;
+            else
+                arr[s[i]-'a'][0]++;
+        }
+
+        string ans = "";
+        for(ll i=0;i<n;i++)
+        {
+            char c = s[i];
+            for(char ch = 'a';ch<='z';ch++)
+            {
+                if(i&1 and arr[ch-'a'][1] > 0){
+                    ans += ch;
+                    arr[ch-'a'][1]--;
+                    break;
+                }
+                else if(!(i&1) and arr[ch-'a'][0] > 0){
+                    ans += ch;
+                    arr[ch-'a'][0]--;
+                    break;
+                }
+            }
+        }
+
+        cout<<ans<<endl;
+    }
+
+    else{
+        sort(s.begin(), s.end());
+        cout<<s<<endl;
+        return;
+    }
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

@@ -94,36 +94,33 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll rw, rh;
+    cin>>rw>>rh;
+    ll x1,y1,x2,y2;
+    cin>>x1>>y1>>x2>>y2;
+    ll w,h;
+    cin>>w>>h;
+    if(w + (x2 - x1) > rw and h + (y2 - y1) > rh){
+        cout<<-1<<endl;
+        return;
+    }
+
+    ll ans = 1e9;
+    if(w + (x2 - x1) <= rw){
+        ans  = min(ans, max(0ll, w - x1));
+        ans = min(ans, max(0ll, x2 - rw + w));
+    }
+    if(h + (y2 - y1) <= rh){
+        ans = min(ans, max(0ll, h - y1));
+        ans = min(ans, max(0ll, y2 - rh + h));
+    }
+    cout<<double(ans)<<endl;
 }
 int main()
 {
+    cout << fixed << setprecision(9);
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

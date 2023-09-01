@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,52 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+#include <cstdio>
+#include <cstring>
+
+void solve()
+{
+    // interative problem
+    ll n; cin>>n;
+
+    vector<ll>nums(n+1);
+    nums[0] = 0;
+    for(ll i=1;i<=n;i++)
+        cin>>nums[i];
+    
+    vector<ll>pref(n+1,0);
+    for(ll i=1;i<=n;i++)
+        pref[i] = nums[i] + pref[i-1];
+    
+    ll low = 1;
+    ll high = n;
+    ll ans = low;
+    while(low <= high)
+    {   
+        ll mid = low + (high - low)/2;
+        cout<<"? "<<mid-low+1<<" ";
+        for(ll i=low;i<=mid;i++){
+            cout<<i<<" ";
+        }
+        cout<<endl;
+        cout.flush();
+
+        ll response;
+        cin>>response;
+        if((pref[mid] - pref[low-1]) == response - 1)
+        {
+            ans = mid;
+            high = mid-1;
+        }
+        else{
+            low = mid+1;
+        }
+    }   
+    cout<<"! "<<ans<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

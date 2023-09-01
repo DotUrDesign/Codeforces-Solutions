@@ -94,38 +94,55 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll n, x; cin>>n>>x;
+    if(2*x > n){
+        cout<<-1<<endl;
+        return;
+    }
+    vector<ll>ans(n+1,0);
+
+    if(!(x&1)){
+        ans[1] = x, ans[n] = 1;
+        ll st = n;
+        if(n&1) st--;
+        for(ll i=2;i<=n && st > 0;i+=2,st-=2){
+            if(st != x)
+                ans[i] = st;
+        }
+
+        st = 3;
+        for(ll i=3;i<=n and st <= n; i+=2,st+=2){
+            if(st != x)
+            ans[i] = st;
+        }
+    }
+
+    else{
+        ans[1] = x, ans[n] = 1;
+        ll st = 2;
+        ans[x] = 2*x;
+        for(ll i=2;i<=n && st <= n;i+=2,st+=2)
+        {
+            if(st != 2*x)
+            ans[i] = st;
+        }
+
+        st = 3;
+        for(ll i=3;i<=n && st <= n;i+=2,st+=2)
+        {
+            if(st != x)
+                ans[i] = st;
+        }
+    }
+
+    for(ll i=1;i<=n;i++)
+        cout<<ans[i]<<" ";
+    cout<<endl;
 }
 int main()
 {
-   ios_base::sync_with_stdio(false);
-   cin.tie(NULL);
      ll t; cin>>t;
      while(t--)
         solve();

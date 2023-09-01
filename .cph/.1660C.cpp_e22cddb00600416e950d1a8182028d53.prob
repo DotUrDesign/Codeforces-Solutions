@@ -1,0 +1,1 @@
+{"name":"Local: 1660C","url":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1660C.cpp","tests":[{"id":1692790034502,"input":"6\naabbdabdccc\nzyx\naaababbb\naabbcc\noaoaaaoo\nbmefbmuyw","output":"3\n3\n2\n0\n2\n7"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1660C.cpp","group":"local","local":true}

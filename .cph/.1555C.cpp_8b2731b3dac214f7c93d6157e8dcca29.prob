@@ -1,0 +1,1 @@
+{"name":"Local: 1555C","url":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1555C.cpp","tests":[{"id":1692244922476,"input":"3\n3\n1 3 7\n3 5 1\n3\n1 3 9\n3 5 1\n1\n4\n7","output":"7\n8\n0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1555C.cpp","group":"local","local":true}

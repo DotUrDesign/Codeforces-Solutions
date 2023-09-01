@@ -11,6 +11,7 @@ iiiiiiiiiiii  iiiiiiiiiiii  iiiiiiiiiiii       t
 #include<bits/stdc++.h>
 using namespace std;
 using ll = long long;
+#define ar array
 
 int fcuk = 1000000;
 bool sieve[1000001];
@@ -82,17 +83,46 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
+
+/* Template for ordered set */
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
 void solve()
 {
-    
+    ll n; cin>>n;
+    vector<ll>nums1(n), nums2(n);
+    vector<ll>vec(n+1);
+    for(ll i=0;i<n;i++){
+        cin>>nums1[i];
+        vec[nums1[i]] = i;
+    }
+    for(ll i=0;i<n;i++){
+        cin>>nums2[i];
+    }
+
+    ll c = 0, id = -1;
+    for(ll i=n-1;i>=0;i--)
+    {
+        if(vec[nums2[i]] < id || id == -1){
+            c++;
+            id = vec[nums2[i]];
+        }
+        else
+            break;
+    }
+
+    cout<<(n-c)<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
+   ios_base::sync_with_stdio(false);
+   cin.tie(NULL);
      ll t; cin>>t;
      while(t--)
         solve();

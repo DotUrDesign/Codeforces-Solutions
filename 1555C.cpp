@@ -94,33 +94,33 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    ll m; cin>>m;
+    vector<vector<ll>>nums(2, vector<ll>(m));
+    for(ll i=0;i<2;i++)
+    {
+        for(ll j=0;j<m;j++)
+            cin>>nums[i][j];
+    }
+
+    // prefix sum
+    vector<vector<ll>>pref(2, vector<ll>(m));
+    for(ll i=0;i<2;i++)
+    {
+        pref[i][0] = nums[i][0];
+        for(ll j=1;j<m;j++)
+            pref[i][j] = pref[i][j-1] + nums[i][j];
+    }
+
+    ll ans = INT_MAX;
+    for(ll i=0;i<m;i++)
+    {   
+        ans = min(ans, 
+                    max(pref[0][m-1] -  pref[0][i] , 
+                        (i-1 >= 0 ? pref[1][i-1] : 0)));
+    }
+    cout<<ans<<endl;
 }
 int main()
 {

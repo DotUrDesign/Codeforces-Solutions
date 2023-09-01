@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,60 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
+void solve()
+{
+    ll n; cin>>n;
+    vector<ll>nums(n);
+    for(ll i=0;i<n;i++)
+        cin>>nums[i];
+
+    /* Intuition --> We have to consider 2 same prime numbers or 3 different prime numbers to form a composite number.
+
+    Lets undertand it step by step -->
+    
+    1st case --> 2 same prime number -- p  ==> the number formed by this prime number = p^2 aand its divisors are 1,p,p^2 and the prime divisors are "p" and the composite numbers are "p^2".
+    Total composite divisors = 1, total prime divisors = 1
+    Hence, strongly composite number
+
+    2nd case --> 3 different prime numbers -- p,q,r  ==>  the number formed by these prime numbers = pqr and its divisors are --> 1,p,q,r,pq,qr,pr,pqr and the prime divisors are p,q,r and the composite divisors are pq,qr,pr,pqr . 
+    Total composite divisors = 4, total prime divisors = 3;
+    hence, strongly composite number
+    */
+
+
+   map<ll,ll>mpp;
+   for(ll i=0;i<n;i++)
+   {
+        ll x = nums[i];
+        for(ll j=2;(j*j)<=x;j++)
+        {
+            while((x%j) == 0)
+            {
+                x /= j;
+                mpp[j]++;
+            }
+            if(x == 1)
+                break;
+        }
+        if(x != 1)
+            mpp[x]++;
    }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+
+//    for(auto it:mpp)
+//     cout<<it.first << ' '<<it.second<<endl;
+
+    ll ans = 0, rem = 0;
+    for(auto it:mpp)
+    {
+        ans += (it.second/2);
+        rem += (it.second%2);
+    }
+    ans += rem/3;
+    cout<<ans<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;

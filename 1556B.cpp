@@ -94,33 +94,51 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+ll calc(ll x,vector<ll>& nums)
+{
+    ll n = nums.size();
+    ll delta = 0;
+    ll ans = 0;
+    for(ll i=0;i<n;i++)
+    {
+        delta += (x - nums[i]);
+        ans += abs(delta);
+        x ^= 1;
+    }
+    return ans;
+}
+
+void solve()
+{
+    ll n; cin>>n;
+    vector<ll>nums(n);  
+    ll co = 0, ce = 0;
+    for(ll i=0;i<n;i++){
+        cin>>nums[i];
+        nums[i] = nums[i]%2;
+        if(nums[i]&1)   co++;
+        else    ce++;
+    }
+
+    if(co != n/2 and co != (n+1)/2){
+        cout<<-1<<endl;
+        return;
+    }
+
+    if(co == ce){
+        cout<< min(calc(0,nums), calc(1,nums))<<endl;
+    }
+    else {
+        if(co == ce + 1)
+        {
+            cout<<calc(1,nums)<<endl;
+        }
+        else if(ce == co + 1)
+        {
+            cout<<calc(0,nums)<<endl;
+        }
+    }
+
 }
 int main()
 {

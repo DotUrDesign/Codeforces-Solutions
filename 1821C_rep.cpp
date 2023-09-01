@@ -10,7 +10,7 @@ iiiiiiiiiiii  iiiiiiiiiiii  iiiiiiiiiiii       t
 
 #include<bits/stdc++.h>
 using namespace std;
-using ll = long long;
+using ll = int;
 #define ar array
 
 int fcuk = 1000000;
@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,39 +92,49 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+void solve()
+{
+    string s; cin>>s;
+    ll n = s.length();
+
+    vector<ll>dp(n+1,0);
+    dp[0] = 0; dp[1] = 1; dp[2] = 2; dp[3] = 2;
+    for(ll i=4;i<=n;i++)
+        dp[i] = 1 + dp[i/2];
+
+    map<char,ll>mpp;
+    for(char ch='a';ch<='z';ch++)
+    {
+        if(s.find(ch) == string::npos){
+            continue;
+        }
+        ll c = 0,ans = 0;
+        for(ll i=0;i<n;i++)
+        {
+            if(s[i] == ch){
+                ans = max(ans, dp[c]);
+                c = 0;
+            }
+            else{
+                c++;
+            }
+        }
+        ans = max(ans, dp[c]);
+        mpp[ch] = ans;
+    }
+
+    ll ans = INT_MAX;
+    for(auto it: mpp){
+        ans = min(ans, it.second);}
+    cout<<ans<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;
      while(t--)
         solve();
+    return 0;
 }

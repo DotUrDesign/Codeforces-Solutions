@@ -83,9 +83,7 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -94,36 +92,55 @@ double pi = 3.14159, npi = -3.14159;
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-void solve(){
- 
-   int a,b; cin>>a>>b;
- 
-   int p = (a+b+1)/2;
-   int q = (a+b)/2;
-   set<int> s;
-   for(int x=0; x<=p; x++){
-      int y = a - (p-x);
-      if(y >= 0 && y <= q)
-        s.insert(x+y); 
-   }
- 
-   swap(p,q);
- 
-    for(int x=0; x<=q; x++){
-      int y = b - (q-x);
-      if(y >= 0 && y <= p)
-        s.insert(x+y); 
-   }
-   
-   cout<<s.size()<<endl;
-   for(int i: s)
-    cout<<i<<" ";
-   cout<<endl;
- 
-  
+ll find(ll high, ll low, ll d)
+{
+    // excluding both the high and low --> only considering the cookies between the high and low.
+    return (high - low - 1)/d;
+}
+
+void solve()
+{
+    ll b,n,d;
+    cin>>b>>n>>d;
+
+    vector<ll>nums(n);
+    for(ll i=0;i<n;i++)
+        cin>>nums[i];
+    
+    vector<ll>pref(n), suff(n);
+
+    pref[0] = 1 + (nums[0] - 1 + d - 1)/d;
+    for(ll i=1;i<n;i++)
+        pref[i] = pref[i-1] + find(nums[i],nums[i-1],d) + 1;
+
+    suff[n-1] = 1 + find(b+1, nums[n-1], d);
+    for(ll i=n-2;i>=0;i--)
+        suff[i] = suff[i+1] + find(nums[i+1], nums[i], d) + 1;
+
+    map<ll,ll>mpp; // to keep track of the second output...
+    
+    // removing the first cookie shop
+    ll ans = suff[1] + (nums[1] + d-2)/d;
+    mpp[ans]++;
+
+    // removing the last cookie shop
+    ll curr = pref[n-2] + find(b+1, nums[n-2],d);
+    mpp[curr]++;
+    ans = min(ans, curr);
+
+    // now applying brute force approach i.e., removing each cookie shop one by one and checking whats the minimum in every case
+    for(ll i=1;i<n-1;i++)
+    {
+        ll curr = pref[i-1] + suff[i+1] + find(nums[i+1], nums[i-1] , d);
+        mpp[curr]++;
+        ans = min(ans, curr);
+    }
+
+    cout<<ans<<" "<<mpp[ans]<<endl;
 }
 int main()
 {
+   // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;
