@@ -13,8 +13,8 @@ using namespace std;
 using ll = long long;
 #define ar array
 
-int fcuk = 1000000;
-bool sieve[1000001];
+int fcuk = 10000000;
+bool sieve[10000001];
 void createSieve()
 {
     sieve[1] = sieve[0] = false;
@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    if(a[0] == b[0])
-       return a[1] < b[1];
-    return a[0] > b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -94,28 +94,53 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 
 void solve()
 {
-    ll n,k; cin>>n>>k;
-    vector<ll>nums(n);
-    vector<ar<ll,2>>v;
-    for(ll i=0;i<n;i++){
-        cin>>nums[i];
-        nums[i] = nums[i]%k;
-        if(nums[i] > 0)
-            nums[i] -= k;
-        v.push_back({nums[i],i+1});
+    ll l,r;
+    cin>>l>>r;
+    if(r-l >= 1)
+    {
+        ll val;
+        for(ll i=r;i>=l;i--)
+        {
+            if(!(i&1)){
+                val = i;
+                break;
+            }
+        }
+        if(val == 2)
+            cout<<-1<<endl;
+        else
+            cout<<2<<" "<<val-2<<endl;
+        return;
     }
-    
-    sort(v.begin(), v.end(), comparator);
-
-    for(auto it : v)
-        cout<<it[1]<<" ";
-    cout<<endl;
+    if(sieve[l]){
+        cout<<-1<<endl;
+        return;
+    }
+    if(!(l&1)){
+        if(l == 2)
+            cout<<-1<<endl;
+        else
+            cout<<2<<" "<<l-2<<endl;
+    }
+    else
+    {
+        // cout<<"hello";
+        for(ll i=2;i<=l;i++)
+        {
+            if(l%i == 0 and (l-i)%i == 0){
+                cout<<i<<" "<<(l-i)<<endl;
+                return;
+            }
+        }
+        cout<<-1<<endl;
+    }
 }
 int main()
 {
    // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
+   createSieve();
      ll t; cin>>t;
      while(t--)
         solve();

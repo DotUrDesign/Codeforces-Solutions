@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    if(a[0] == b[0])
-       return a[1] < b[1];
-    return a[0] > b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -94,22 +94,58 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 
 void solve()
 {
-    ll n,k; cin>>n>>k;
+    ll n, x; cin>>n>>x;
     vector<ll>nums(n);
-    vector<ar<ll,2>>v;
-    for(ll i=0;i<n;i++){
+    for(ll i=0;i<n;i++)
         cin>>nums[i];
-        nums[i] = nums[i]%k;
-        if(nums[i] > 0)
-            nums[i] -= k;
-        v.push_back({nums[i],i+1});
-    }
     
-    sort(v.begin(), v.end(), comparator);
+    // (sum, index)
+    map<ll,ll>s, e;
+    ll sum = 0;
+    for(ll i=0;i<n;i++)
+    {   
+        sum += nums[i];
+        if(s.find(sum) == s.end() and sum != 0)
+            s[sum] = i;
+    }
 
-    for(auto it : v)
-        cout<<it[1]<<" ";
-    cout<<endl;
+    sum = 0;
+    for(ll i=n-1;i>=0;i--)
+    {
+        sum += nums[i];
+        if(e.find(sum) == e.end() and sum != 0)
+            e[sum] = i;
+    }
+
+    // for(auto it:e)
+    //     cout<<it.first<<" "<<it.second<<endl;
+
+    ll req = sum - x;
+    if(req == 0){
+        cout<<0<<endl;
+        return;
+    }
+
+    if(req < 0){
+        cout<<-1<<endl;
+        return;
+    }
+
+
+    ll ans = min(s[req] +1, n - e[req]);
+
+    // cout<<req<<" "<<ans<<endl;
+
+    for(auto it : s)
+    {
+        if(it.first >= req)
+            break;
+        ll tot = it.second + 1;
+        if(e.find(req-it.first) != e.end())
+            tot += n - e[req-it.first];
+        ans = min(ans, tot);
+    }
+    cout<<ans<<endl;
 }
 int main()
 {

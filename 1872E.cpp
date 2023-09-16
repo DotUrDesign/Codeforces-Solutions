@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    if(a[0] == b[0])
-       return a[1] < b[1];
-    return a[0] > b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -94,21 +94,52 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 
 void solve()
 {
-    ll n,k; cin>>n>>k;
+    ll n;cin>>n;
     vector<ll>nums(n);
-    vector<ar<ll,2>>v;
-    for(ll i=0;i<n;i++){
+    for(ll i=0;i<n;i++)
         cin>>nums[i];
-        nums[i] = nums[i]%k;
-        if(nums[i] > 0)
-            nums[i] -= k;
-        v.push_back({nums[i],i+1});
-    }
-    
-    sort(v.begin(), v.end(), comparator);
 
-    for(auto it : v)
-        cout<<it[1]<<" ";
+    string s; cin>>s;
+
+    vector<ll>pref(n,0);
+    pref[0] = nums[0];
+    ll n1 = 0, n2 =0;
+    for(ll i=1;i<n;i++){
+        pref[i] = pref[i-1]^nums[i];
+        if(s[i] == '0')
+            n1 ^= nums[i];
+        else
+            n2 ^= nums[i];
+    }
+
+    // for(auto it:pref)
+    //     cout<<it<<" ";
+    // cout<<n1<<" "<<n2<<endl;
+    queue<ar<int,3>>pq;
+
+    ll q; cin>>q;
+    while(q--)
+    {
+        ll y; cin>>y;
+        if(y == 1)
+        {
+            ll l,r;
+            cin>>l>>r;
+            l--,r--;
+            ll val = pref[r];
+            if(l != 0)
+                val = pref[r] ^ pref[l-1];
+            n1 = n1 ^ val;
+            n2 = n2 ^ val;
+        }
+        else{
+            ll x; cin>>x;
+            if(x == 0)
+                cout<<n1<<" ";
+            else
+                cout<<n2<<" ";
+        }
+    }
     cout<<endl;
 }
 int main()

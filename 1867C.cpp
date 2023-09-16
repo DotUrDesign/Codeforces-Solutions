@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    if(a[0] == b[0])
-       return a[1] < b[1];
-    return a[0] > b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -94,22 +94,34 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 
 void solve()
 {
-    ll n,k; cin>>n>>k;
-    vector<ll>nums(n);
-    vector<ar<ll,2>>v;
-    for(ll i=0;i<n;i++){
-        cin>>nums[i];
-        nums[i] = nums[i]%k;
-        if(nums[i] > 0)
-            nums[i] -= k;
-        v.push_back({nums[i],i+1});
+    ll n; cin>>n;
+    set<ll>s;
+    for(ll i=0;i<n;i++)
+    {
+        ll x; cin>>x;
+        s.insert(x);
     }
-    
-    sort(v.begin(), v.end(), comparator);
 
-    for(auto it : v)
-        cout<<it[1]<<" ";
-    cout<<endl;
+    ll mex = 0;
+    for(auto it:s)
+    {
+        if(mex != it)
+            break;
+        mex++;
+    }
+
+    ll y; 
+    while(true)
+    {
+        cout<<mex<<endl;
+        cout.flush();
+
+        cin>>y;
+        if(y == -1)
+            return;
+        
+        mex = y;
+    }
 }
 int main()
 {

@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
+bool comparator(const pair<int,int> &a, const pair<int,int> &b)
 {
-    if(a[0] == b[0])
-       return a[1] < b[1];
-    return a[0] > b[0];
+    if(a.first == b.first)
+       return a.second>b.second;
+    return a.first < b.first;
 }
 
 /* BIT MANIPULATION */
@@ -92,24 +92,36 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
+
 void solve()
 {
-    ll n,k; cin>>n>>k;
-    vector<ll>nums(n);
-    vector<ar<ll,2>>v;
-    for(ll i=0;i<n;i++){
+    ll n; cin>>n;
+    ll nums[n];
+    for(ll i=0;i<n;i++)
         cin>>nums[i];
-        nums[i] = nums[i]%k;
-        if(nums[i] > 0)
-            nums[i] -= k;
-        v.push_back({nums[i],i+1});
-    }
     
-    sort(v.begin(), v.end(), comparator);
-
-    for(auto it : v)
-        cout<<it[1]<<" ";
-    cout<<endl;
+    // The question is actually indirectly asking to find the maximum xor of any particular subarray.
+    // Carefully look at the constraints --> The actual hint lies there...
+    // XOR value <= OR value
+    ll ans = 0;
+    for(ll k=1;k<=255;k++)
+    {
+        vector<ll>dp(256, 0);
+        ll curxor = 0;
+        bool f = false;
+        for(ll i=0;i<n;i++)
+        {
+            curxor = curxor ^ nums[i];
+            if(dp[curxor ^ k] == 1 or curxor == k){
+                f = true;
+                break;
+            }
+            dp[curxor] = 1;
+        }
+        if(f)
+            ans = max(ans, k);
+    }
+    cout<<ans<<endl;
 }
 int main()
 {
