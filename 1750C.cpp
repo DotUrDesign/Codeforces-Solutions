@@ -108,44 +108,65 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
-{
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
-}
-
-ll BS(ll n)
-{
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
-    {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
-    }
-    return ans;
-}
-
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
+    ll n; cin>>n;
+    string s1, s2; cin>>s1>>s2;
+    
+    // not possible cases -> equal and not equal at the same time or if "n" is odd, then the number of 1's is also odd.
+    bool f1 = false, f2 = false;
+    ll num = 0;
+    for(ll i=0;i<n;i++)
+    {
+        if(s1[i] == s2[i])
+            f1 = true;
+        else 
+            f2 = true;
+        if(s1[i] == '1')
+            num++;
+    }
+    if(f1 and f2)
+    {
+        cout<<"NO"<<endl;
+        return;
+    }
 
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    cout<<"YES"<<endl;
+    vector<pair<ll,ll>>ans;
+    char ok = '1';
+    if(!(n&1))
+    {
+        if((f1 and num&1) or (f2 and !(num&1))){
+            ans.push_back({1, n});
+            ok = '0';
+        }
+
+        for(ll i=0;i<n;i++)
+        {
+            if(s1[i] == ok)
+                ans.push_back({i+1, i+1});
+        }
+    }
+    else
+    {
+        for(ll i=0;i<n;i++)
+        {
+            if(s1[i] == '1')
+                ans.push_back({i+1,i+1});
+        }
+
+        if((f2 and !(num&1)) or (f1 and num&1))
+        {
+            ans.push_back({1,n});
+            ans.push_back({1,n-1});
+            ans.push_back({n,n});
+        }
+    }
+
+    cout<<ans.size()<<endl;
+    for(auto it:ans)
+        cout<<it.first<<" "<<it.second<<endl;
+
 }
 int main()
 {

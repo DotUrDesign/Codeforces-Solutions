@@ -108,44 +108,53 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
+bool check(ll k, multiset<ll> ms)
 {
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
-}
-
-ll BS(ll n)
-{
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
+    ll i=1;
+    ll stages = 0;
+    ll val = k+1;
+    while(true)
     {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
+        auto id = ms.lower_bound(val-i);
+        if(id == ms.begin() and *id > val-i)
+            break;
+        if(id == ms.end() or *id > val-i)
+            id--;
+        ms.erase(id);
+        // for(auto it:ms)
+        //     cout<<it<<" ";
+        // cout<<endl;
+        stages++;
+        if(stages == k)
+            return true;
+        if(ms.empty())
+            break;
+        id = ms.begin();
+        ll num = *id + val-i;
+        ms.erase(id);
+        ms.insert(num);
+        i++;
     }
-    return ans;
+    return false;
 }
 
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
+    ll n; cin>>n;
+    vector<ll>nums(n);
+    multiset<ll>ms;
+    for(ll i=0;i<n;i++){
+        cin>>nums[i];
+        ms.insert(nums[i]);
+    }
 
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    ll ans = 0;
+    for(ll k=1;k<=n;k++)
+    {
+        if(check(k, ms))
+            ans = k;
+    }
+    cout<<ans<<endl;
 }
 int main()
 {

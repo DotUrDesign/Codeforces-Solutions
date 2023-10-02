@@ -64,28 +64,66 @@ bool comparator(const pair<int,int> &a, const pair<int,int> &b)
     return a.first < b.first;
 }
 
-/* BIT MANIPULATION */
-/*
-#define isOn(S, j) (S & (1 << j))
-#define setBit(S, j) (S |= (1 << j))
-#define clearBit(S, j) (S &= ~(1 << j))
-#define toggleBit(S, j) (S ^= (1 << j))
-#define LSB(S) (S & (-S))
-#define setAll(S, n) (S = (1 << n) - 1)
-#define modulo(S, N) ((S) & (N - 1))   // returns S % N, where N is a power of 2
-#define isPowerOfTwo(S) (!(S & (S - 1)))
-#define nearestPowerOfTwo(S) ((int)pow(2.0, (int)((log((double)S) / log(2.0)) + 0.5)))
-#define turnOffLastBit(S) ((S) & (S - 1))
-#define turnOnLastZero(S) ((S) | (S + 1))
-#define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
-#define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
-*/
+ll mod = 998244353;
+ll power(ll x, ll n)
+{
+    ll ans = 1;
+    long long nn = n;
+    if (nn < 0) nn = -1 * nn;
+    while (nn) {
+        if (nn % 2) {
+        ans = (ans%mod * x%mod)%mod;
+        nn = nn - 1;
+        } else {
+        x = (x%mod * x%mod)%mod;
+        nn = nn / 2;
+        }
+    }
+    if (n < 0) ans = 1/ans;
+    return ans%mod;
+}
+
+vector<int> lg(vector<int>& nums){
+    int n = nums.size();
+    vector<int> l(n);
+    stack<int> st;
+    for(int i = 0;i<n;i++){
+        while(!st.empty() && st.top() < nums[i]) st.pop();
+        if(st.empty()) st.push(nums[i]); 
+        l[i] = st.top();
+    }
+    return l;
+}
+
+vector<int> rg(vector<int>& nums){
+    int n = nums.size();
+    vector<int> r(n);
+    stack<int> st;
+    for(int i = n-1;i>=0;i--){
+        while(!st.empty() && st.top()<nums[i]) st.pop();
+        if(st.empty()) st.push(nums[i]);
+        r[i] = st.top();
+    }
+    return r;
+}
+
+// Function to calculate nCr (n choose r)
+ll nCr(ll n, ll r) {
+    if (r > n) 
+        return 0;
+    if (r == 0 || n == r) 
+        return 1;
+
+    double res = 0;
+    for (ll i = 0; i < r; i++) {
+        res += log(n-i) - log(i+1);
+    }
+    return (ll)round(exp(res));
+}
 
 /* 
 Template for floating precision...
-double pi = 3.14159, npi = -3.14159;
-    cout << fixed << setprecision(0) << pi << 
- << npi << endl;
+    cout << fixed << setprecision(0);
 */
 
 /* Template for ordered set */
@@ -97,33 +135,46 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 void solve()
 {
     ll n; cin>>n;
-    vector<ar<ll,2>>nums;
-    ll i=1;
-    while(i<=n)
+    ll t = n;
+    vector<vector<ll>>nums;
+    set<ll>s;
+    while(t--)
     {
-        ll m; cin>>m;
-        for(ll j=0;j<m;j++)
-        {
-            ll x; cin>>x;
-            nums.push_back({x,i});
+        ll size; cin>>size;
+        vector<ll>arr(size);
+        for(auto &it : arr){
+            cin>>it;
+            s.insert(it);
         }
-        i++;
+        nums.push_back(arr);
     }
 
-    // for(auto it : nums)
-    //     cout<<it[0]<<" "<<it[1]<<endl;
-
-    sort(nums.begin(), nums.end());
-    ll combines = 0;
-    ll size = nums.size();
-    for(ll i=0;i<size-1;i++)
+    ll sp = 0, com = n-1;
+    for(ll i=0;i<n;i++)
     {
-        if(nums[i][1] != nums[i+1][1])
-            combines++;
+        for(ll j=0;j<nums[i].size();j++)
+        {
+            auto id = s.lower_bound(nums[i][j]);
+            id++;
+            if(id == s.end())
+            {
+                if(j+1 != nums[i].size())
+                    sp++, com++;
+                continue;
+            }
+            
+            ll val = *id;
+            if(j+1 < nums[i].size() and val != nums[i][j+1])
+                sp++,com++;
+        }
     }
-    cout<<combines-1<<" "<<combines<<endl;
+
+    cout<<sp<<" "<<com<<endl;
 }
 int main()
 {
-    solve();
+   // Place the template of  the precision code here...
+   ios_base::sync_with_stdio(false);
+   cin.tie(NULL);
+        solve();
 }

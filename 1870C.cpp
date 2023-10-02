@@ -108,44 +108,41 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
-{
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
-}
-
-ll BS(ll n)
-{
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
-    {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
-    }
-    return ans;
-}
-
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
-
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    ll n,k; 
+    cin>>n>>k;
+    ll nums[n];
+    bool mark[k+1]{};
+    for(ll i=0;i<n;i++){
+        cin>>nums[i];
+        mark[nums[i]] = 1;
+    }
+    
+    ll prefm[n];
+    prefm[0] = nums[0];
+    for(ll i=1;i<n;i++)
+        prefm[i] = max(prefm[i-1], nums[i]);
+    
+    ll suffm[n];
+    suffm[n-1] = nums[n-1];
+    for(ll i=n-2;i>=0;i--)
+        suffm[i] = max(suffm[i+1], nums[i]);
+    sort(suffm, suffm+n);
+    for(ll i=1;i<=k;i++)
+    {
+        if(!mark[i])
+        {
+            cout<<0<<" ";
+            continue;
+        }
+        ll id1 = lower_bound(prefm, prefm + n, i) - prefm;
+        ll id2 = n - 1 -  (lower_bound(suffm, suffm + n, i) - suffm);
+        // cout<<id1<<" "<<id2<<endl;
+        ll len = id2 - id1 + 1;
+        cout<<(len*2)<<" ";
+    }
+    cout<<endl;
 }
 int main()
 {

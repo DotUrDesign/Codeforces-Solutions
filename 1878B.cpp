@@ -108,45 +108,19 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
-{
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
-}
-
-ll BS(ll n)
-{
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
-    {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
-    }
-    return ans;
-}
-
 void solve()
-{
-    ll l,r;
-    cin>>l>>r;
-
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
-}
+{   
+    ll n; cin>>n;
+    ll a = 1;
+    cout<<a<<" ";
+    n -= 1;
+    for(ll i=0;i<n;i++)
+    {
+        a += 2;
+        cout<<a<<" ";
+    }
+    cout<<endl;
+}   
 int main()
 {
    // Place the template of  the precision code here...

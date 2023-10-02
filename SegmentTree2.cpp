@@ -108,44 +108,88 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
+// Type-1 => Query and Type-2 => Update
+vector<ll>seg;
+
+void build(ll idx, ll low, ll high, vector<ll>& nums)
 {
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
+    if(low == high)
+    {
+        seg[idx] = nums[low];
+        return;
+    }
+
+    ll mid = low + (high - low)/2;
+    build(2*idx+1, low, mid, nums);
+    build(2*idx+2, mid+1, high, nums);
+    seg[idx] = min(seg[2*idx+1] , seg[2*idx+2]);
 }
 
-ll BS(ll n)
+ll query(ll idx, ll low, ll high, ll l, ll r)
 {
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
+    // no overlap
+    // l,r,low,high or low,high,l,r
+    if(r <  low or l > high)
+        return INT_MAX;
+
+    // complete overlap
+    // l,low,high,r
+    if(l <= low and high <= r)
+        return seg[idx];
+
+    // partial overlap
+    ll mid = low + (high - low)/2;
+    ll left = query(2*idx+1, low, mid, l, r);
+    ll right = query(2*idx+2, mid+1, high, l ,r);
+    return min(left, right);
+}
+
+void update(ll idx, ll low, ll high, ll i, ll val)
+{
+    if(low == high)
     {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
+        seg[idx] = val;
+        return;
     }
-    return ans;
+
+    ll mid = low + (high - low)/2;
+    if(i <= mid)
+        update(2*idx+1, low, mid, i, val);
+    else    
+        update(2*idx+2, mid+1, high, i, val);
+    seg[idx] = min(seg[2*idx+1], seg[2*idx+2]);
 }
 
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
+    ll n; cin>>n;
+    vector<ll>nums(n);
+    for(ll i=0;i<n;i++)
+        cin>>nums[i];
+    
+    seg.resize(4*n);
+    build(0, 0, n-1, nums); 
 
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    ll q; cin>>q;
+    while(q--)
+    {
+        ll type;cin>>type;
+        if(type == 1)
+        {
+            ll l,r;
+            cin>>l>>r;
+            l--,r--;
+            cout<<query(0, 0, n-1, l, r)<<endl;
+        }
+        else
+        {
+            ll i, val;
+            cin>>i>>val;
+            i--;
+            update(0, 0, n-1, i, val);
+            nums[i] = val;
+        }
+    }
 }
 int main()
 {

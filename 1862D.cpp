@@ -110,18 +110,17 @@ template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tre
 
 bool check(ll mid, ll n)
 {
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
+    ll val = (mid-1)*mid;
+    val /= 2;
+    if(val <= n)
+        return true;
+    return false; 
 }
 
-ll BS(ll n)
+void solve()
 {
-    if(n == 0)
-        return 0;
-    ll low = 1;
+    ll n; cin>>n;
+    ll low = 2;
     ll high = 1e10;
     ll ans = low;
     while(low <= high)
@@ -129,23 +128,15 @@ ll BS(ll n)
         ll mid = low + (high - low)/2;
         if(check(mid, n))
         {
-            ans = mid;
+            ll val = (mid-1)*mid;
+            val /= 2;
+            ans = mid + (n - val);
             low = mid+1;
         }
         else
             high = mid-1;
     }
-    return ans;
-}
-
-void solve()
-{
-    ll l,r;
-    cin>>l>>r;
-
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    cout<<ans<<endl;
 }
 int main()
 {

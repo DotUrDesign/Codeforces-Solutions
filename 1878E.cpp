@@ -108,44 +108,87 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
+vector<ll>segT;
+void build(ll s, ll e, ll i, vector<ll> &nums)
 {
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
+     if (s == e)
+     {
+         segT[i] = nums[s];
+         return;
+     }
+     ll mid = s + (e - s) / 2;
+     build(s, mid, 2 * i + 1, nums);
+     build(mid + 1, e, 2 * i + 2, nums);
+     segT[i] = segT[2 * i + 1] & segT[2 * i + 2];
 }
 
-ll BS(ll n)
+ll check(ll qs, ll qe,ll start, ll end, ll i)
 {
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
-    {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
-    }
-    return ans;
+     if (qs <= start && qe >= end)
+         return segT[i];
+     if (qs > end || qe < start)
+         return INT_MAX;
+     ll mid = start + (end - start) / 2;
+     ll left = check(qs, qe,start, mid, 2 * i + 1);
+     ll right = check( qs, qe,mid + 1, end, 2 * i + 2);
+     return left & right;
 }
+
+
+// bool check(ll mid, ll start , ll k , vector<ll>& nums, ll n)
+// {
+//     ll ans = nums[start];
+//     ll c = start+1;
+//     while(true)
+//     {
+//         if(c > n or (ans&nums[c]) < k)
+//             break;
+//         ans &= nums[c];
+//         c++;
+//     }
+//     if(c-1 >= mid)
+//         return true;
+//     return false;
+// }
 
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
-
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    ll n; cin>>n;
+    vector<ll>nums(n);
+    for(ll i=0;i<n;i++)
+        cin>>nums[i];
+    segT.resize(4 * n);
+    build(0, n-1, 0, nums);
+    
+    ll q; cin>>q;
+    ll l,k; 
+    while(q--)
+    {
+        cin>>l>>k;
+        l--;
+        ll low = l;
+        ll high = n-1;
+        if(nums[l] < k){
+            cout<<-1<<" ";
+            continue;
+        }
+        ll ans = low;
+        while(low <= high)
+        {
+            ll mid = low + (high - low)/2;
+            if(check( l, mid,0,n-1,0) < k)
+            {
+                high = mid-1;
+            }
+            else{
+                ans = mid;
+                low = mid+1;
+            }
+        }
+        ans = (ans >= 0) ? ans+1 : ans;
+        cout<<ans<<' ';
+    }
+    cout<<endl;
 }
 int main()
 {

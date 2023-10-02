@@ -108,44 +108,49 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-bool check(ll mid, ll n)
-{
-    ll maxn = sqrt(n);
-    ll ans = (maxn-1)*3;
-    for(ll i=maxn*maxn;i<=n;i+=maxn)
-        ans++;
-    return ans >= mid;
-}
-
-ll BS(ll n)
-{
-    if(n == 0)
-        return 0;
-    ll low = 1;
-    ll high = 1e10;
-    ll ans = low;
-    while(low <= high)
-    {
-        ll mid = low + (high - low)/2;
-        if(check(mid, n))
-        {
-            ans = mid;
-            low = mid+1;
-        }
-        else
-            high = mid-1;
-    }
-    return ans;
-}
-
 void solve()
 {
-    ll l,r;
-    cin>>l>>r;
+    ll n; cin>>n;
+    vector<vector<ll>>nums(n);
+    set<ll>s;
+    for(ll j=0;j<n;j++)
+    {
+        ll size; cin>>size;
+        for(ll i=0;i<size;i++)
+        {
+            ll x; cin>>x;
+            s.insert(x);
+            nums[j].push_back(x);
+        }
+    }
 
-    ll a = BS(r);
-    ll b = BS(l-1);
-    cout<<(a-b)<<endl;
+    ll ans = 0;
+    set<ll>st;
+    for(auto it :s)
+    {
+        for(ll i=0;i<n;i++)
+        {
+            ll size = nums[i].size();
+            bool flag = true;
+            for(ll j=0;j<size;j++)
+            {
+                if(nums[i][j] == it)
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if(!flag)
+                continue;
+            for(ll j =0;j<size;j++)
+                st.insert(nums[i][j]);
+        }
+        ans = max(ans, (ll)st.size());
+        st.clear();
+    }
+
+    cout<<ans<<endl;
+
 }
 int main()
 {
