@@ -132,43 +132,16 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
-{
-    ll white = 0, black = 0;
-    for(auto it : adj[node])
-    {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
-    }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
-}
-
 void solve()
 {
     ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
-        cin>>it;
-    string s; cin>>s;
-    vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
-
-
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
-    ll ans = 0;
+    ll ans = 1;
     for(ll i=1;i<=n;i++)
-    {
-        if(cw[i] == cb[i])
-            ans++;
-    }
+        ans = ans*i;
+    ans /= n;
+    ans *= 4;
+    ans /= n;
+    ans /= 2;
     cout<<ans<<endl;
 }
 int main()
@@ -176,7 +149,7 @@ int main()
    // Place the template of  the precision code here...
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
-     ll t; cin>>t;
-     while(t--)
+    //  ll t; cin>>t;
+    //  while(t--)
         solve();
 }

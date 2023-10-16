@@ -132,43 +132,57 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
-{
-    ll white = 0, black = 0;
-    for(auto it : adj[node])
-    {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
-    }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
-}
-
 void solve()
 {
-    ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
-        cin>>it;
-    string s; cin>>s;
-    vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
-
-
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
-    ll ans = 0;
-    for(ll i=1;i<=n;i++)
+    ll a, b; cin>>a>>b;
+    string  s; cin>>s;
+    vector<ar<ll,2>>arr;
+    ll st = -1;
+    for(ll i=0;i<s.length();i++)
     {
-        if(cw[i] == cb[i])
-            ans++;
+        if(st == -1 and s[i] == '1')
+            st = i;
+        else if(s[i] == '0')
+        {
+            if(st != -1)
+            {
+                arr.push_back({st, i-1});
+                st = -1;
+            }
+        }
     }
+    if(st != -1)
+        arr.push_back({st, (ll)s.length()-1});
+
+    // for(auto it : arr)
+    //     cout<<it[0]<<" "<<it[1]<<endl;
+
+    if(arr.size() == 1){
+        cout<<a<<endl;
+        return;
+    }
+
+    ll ans = 0;
+    ll n = arr.size();
+    bool f = false;
+    for(ll i=0;i<n-1;i++)
+    {
+        auto val1 = arr[i];
+        auto val2 = arr[i+1];
+        ll diff = val2[0] - val1[1] - 1;
+        ll a1,a2;
+        if(f){
+            a1 = diff*b;
+            a2 = a;
+        }
+        else{
+            a1 = diff*b+a;
+            a2 = 2*a;
+        }
+        ans += min(a1, a2);
+        f = true;
+    }
+    
     cout<<ans<<endl;
 }
 int main()

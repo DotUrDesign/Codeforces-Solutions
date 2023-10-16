@@ -132,44 +132,26 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
-{
-    ll white = 0, black = 0;
-    for(auto it : adj[node])
-    {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
-    }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
-}
-
 void solve()
 {
     ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
-        cin>>it;
-    string s; cin>>s;
-    vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
-
-
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
-    ll ans = 0;
-    for(ll i=1;i<=n;i++)
+    if(n < 7)
     {
-        if(cw[i] == cb[i])
-            ans++;
+        cout<<"NO"<<endl;
+        return;
     }
-    cout<<ans<<endl;
+    ll x = 1;
+    ll y = 2;
+    ll z = n-3;
+    if((n - 3) % 3 == 0)
+        y = 4, z = n-5;
+    if(x == y or y == z or z == x)
+    {
+        cout<<"NO"<<endl;
+        return;
+    }
+    cout<<"YES"<<endl;
+    cout<<x<<" "<<y<<" "<<z<<endl;
 }
 int main()
 {

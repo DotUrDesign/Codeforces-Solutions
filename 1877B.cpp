@@ -57,11 +57,11 @@ ll count_bits_kernighan_algo(ll n)
     return counter;
 }
 
-bool comparator(const pair<int,int> &a, const pair<int,int> &b)
+bool comparator(const ar<ll,2> &a, const ar<ll,2> &b)
 {
-    if(a.first == b.first)
-       return a.second>b.second;
-    return a.first < b.first;
+    if(a[0] == b[0])
+       return a[1]>b[1];
+    return a[0] < b[0];
 }
 
 ll mod = 998244353;
@@ -132,42 +132,51 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
-{
-    ll white = 0, black = 0;
-    for(auto it : adj[node])
-    {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
-    }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
-}
-
 void solve()
 {
-    ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
-        cin>>it;
-    string s; cin>>s;
-    vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
+    ll n,p; cin>>n>>p;
+    vector<ll>a(n), b(n);
+    for(ll i=0;i<n;i++)
+        cin>>a[i];
+    for(ll i=0;i<n;i++)
+        cin>>b[i];
+    ll maxi = *max_element(b.begin(), b.end());
+    ll mini = *min_element(b.begin(), b.end());
 
+    vector<ar<ll,2>>nums;
+    // cost , people
+    for(ll i=0;i<n;i++)
+        nums.push_back({b[i] , a[i]});
+    sort(nums.begin(), nums.end());
 
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
+    // for(auto it: nums)
+    //     cout<<it[0] <<" "<<it[1]<<endl;
+    // cout<<endl;
+
     ll ans = 0;
-    for(ll i=1;i<=n;i++)
+    if(p <= mini)
     {
-        if(cw[i] == cb[i])
-            ans++;
+        cout<<n*p<<endl;
+        return;
+    }
+    ans += p;
+    ll cnt = n-1;
+    for(ll i=0;i<n;i++)
+    {
+        if(nums[i][0] < p)
+        {
+            ll t = max(0ll, min(nums[i][1], cnt));
+            ans += t*nums[i][0];
+            cnt -= t;
+        }
+        else 
+        {
+            ans  += cnt * p;
+            cnt = 0;
+        }
+        // cout<<cnt<<" "<<ans<<endl;
+        if(cnt <= 0)
+            break;
     }
     cout<<ans<<endl;
 }

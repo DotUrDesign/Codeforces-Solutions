@@ -132,44 +132,49 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
+void dfs(ll node, vector<ll>adj[], vector<ll>& vec, vector<vector<ll>>& ans)
 {
-    ll white = 0, black = 0;
+    vec.push_back(node);
     for(auto it : adj[node])
+        dfs(it, adj, vec, ans);
+    
+    if(adj[node].size() == 0)
     {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
+        ans.push_back(vec);
+        vec.clear();
     }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
+    return;
 }
 
 void solve()
 {
     ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
+    vector<ll>nums(n);
+    for(auto &it : nums)
         cin>>it;
-    string s; cin>>s;
     vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
-
-
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
-    ll ans = 0;
-    for(ll i=1;i<=n;i++)
+    ll root = -1;
+    for(ll i=0;i<n;i++)
     {
-        if(cw[i] == cb[i])
-            ans++;
+        if(nums[i] == i+1)
+        {
+            root = nums[i];
+            continue;
+        }
+        adj[nums[i]].push_back(i+1);
     }
-    cout<<ans<<endl;
+    vector<ll>vec;
+    vector<vector<ll>>ans;
+    dfs(root, adj, vec, ans);
+    cout<<ans.size()<<endl;
+    for(ll i=0;i<ans.size();i++)
+    {
+        cout<<ans[i].size()<<endl;
+        for(auto it : ans[i])
+            cout<<it<<" ";
+        cout<<endl;
+    }
+    cout<<endl;
 }
 int main()
 {

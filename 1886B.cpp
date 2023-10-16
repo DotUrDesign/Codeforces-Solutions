@@ -132,48 +132,34 @@ Template for floating precision...
 using namespace __gnu_pbds;
 template<class T> using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
-pair<ll,ll> dfs(ll node, vector<ll>adj[], string& s,vector<ll>& cb, vector<ll>& cw)
-{
-    ll white = 0, black = 0;
-    for(auto it : adj[node])
-    {
-        auto [a, b] = dfs(it, adj, s, cb, cw);
-        white += a, black += b;
-    }
-    if(s[node-1] == 'W')
-        white++;
-    else 
-        black++;
-    cw[node] = white;
-    cb[node] = black;
-    return make_pair(white, black);
-}
-
 void solve()
 {
-    ll n; cin>>n;
-    vector<ll>v(n-1);
-    for(auto &it : v)
-        cin>>it;
-    string s; cin>>s;
-    vector<ll>adj[n+1];
-    for(ll i=0;i<n-1;i++)
-        adj[v[i]].push_back(i+2);
+    double px, py, ax, ay, bx, by;
+    cin>>px>>py>>ax>>ay>>bx>>by;
+    double d1 = sqrt(ax*ax + ay*ay);
+    double d2 = sqrt((ax-px)*(ax-px) + (ay-py)*(ay-py));
+    double d3 = sqrt(bx*bx + by*by);
+    double d4 = sqrt((bx-px)*(bx-px) + (by-py)*(by-py));
+    double d5 = sqrt((bx-ax)*(bx-ax) + (by-ay)*(by-ay));
+    // cout<<d1<<' '<<d2<<" "<<d3<<" "<<d4<<" "<<d5<<endl;
 
-
-    vector<ll>cb(n+1,0), cw(n+1,0);
-    dfs(1, adj, s,cb,cw);
-    ll ans = 0;
-    for(ll i=1;i<=n;i++)
+    double low = 0.0;
+    double high = 1e9;
+    double val = 1e-10;
+    while(high - low >= val)
     {
-        if(cw[i] == cb[i])
-            ans++;
+        double mid = low + (high - low)/2.0;
+        if( (d1 <= mid and d4 <= mid and d5 <= 2.0*mid) or (d2 <= mid and d3 <= mid and d5 <= 2.0*mid) or (max(d1,  d2) <= mid) or (max(d3, d4) <= mid))
+            high = mid;
+        else
+            low = mid;
     }
-    cout<<ans<<endl;
+    cout<<low<<endl;
 }
 int main()
 {
    // Place the template of  the precision code here...
+   cout << fixed << setprecision(10);
    ios_base::sync_with_stdio(false);
    cin.tie(NULL);
      ll t; cin>>t;
