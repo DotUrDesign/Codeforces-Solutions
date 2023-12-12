@@ -1,0 +1,1 @@
+{"name":"Local: 1678A","url":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1678A.cpp","tests":[{"id":1701487567923,"input":"3\n3\n1 2 3\n3\n1 2 2\n3\n1 2 0\n","output":"4\n3\n2\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\PRATYUSH\\OneDrive\\Desktop\\CP Codes\\1678A.cpp","group":"local","local":true}
